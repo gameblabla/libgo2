@@ -949,7 +949,6 @@ void go2_presenter_destroy(go2_presenter_t* presenter)
     sem_destroy(&presenter->freeSem);
     sem_destroy(&presenter->usedSem);
 
-  
     while(go2_queue_count_get(presenter->usedFrameBuffers) > 0)
     {
         go2_frame_buffer_t* frameBuffer = go2_queue_pop(presenter->usedFrameBuffers);
@@ -959,6 +958,8 @@ void go2_presenter_destroy(go2_presenter_t* presenter)
         go2_frame_buffer_destroy(frameBuffer);
         go2_surface_destroy(surface);
     }
+    
+	if (presenter->usedFrameBuffers) go2_queue_destroy(presenter->usedFrameBuffers);
 
     while(go2_queue_count_get(presenter->freeFrameBuffers) > 0)
     {
@@ -969,8 +970,11 @@ void go2_presenter_destroy(go2_presenter_t* presenter)
         go2_frame_buffer_destroy(frameBuffer);
         go2_surface_destroy(surface);
     }
+    
+	if (presenter->freeFrameBuffers) go2_queue_destroy(presenter->freeFrameBuffers);
 
     free(presenter);
+    presenter = NULL;
 }
 
 void go2_presenter_post(go2_presenter_t* presenter, go2_surface_t* surface, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, go2_rotation_t rotation)
