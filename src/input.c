@@ -40,7 +40,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 #define BATTERY_BUFFER_SIZE (128)
 
 static const char* EVDEV_NAME = "/dev/input/by-path/platform-odroidgo2-joypad-event-joystick";
-static const char* EVDEV_NAME2 = "/dev/input/by-path/platform-ff300000.usb-usb-0:1.2:1.0-event-joystick"
+static const char* EVDEV_NAME2 = "/dev/input/by-path/platform-ff300000.usb-usb-0:1.2:1.0-event-joystick";
 static const char* BATTERY_STATUS_NAME = "/sys/class/power_supply/battery/status";
 static const char* BATTERY_CAPACITY_NAME = "/sys/class/power_supply/battery/capacity";
 
