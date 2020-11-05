@@ -31,8 +31,7 @@ install:
 	cp $(TARGET) $(DESTDIR)/$(TARGET)
 	
 install-headers:
-	mkdir $(DESTDIR)$(PREFIX)/include/go2
-	cp src/*.h $(DESTDIR)$(PREFIX)/include/go2
+	cp -rp src/*.h $(DESTDIR)$(PREFIX)/include/go2
 
 install-lib:
 	cp $(TARGET) $(DESTDIR)$(PREFIX)/lib/
