@@ -23,7 +23,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 #include <xf86drm.h>
 #include <xf86drmMode.h>
-#include <drm/drm_fourcc.h>
+#include <drm_fourcc.h>
 #include <gbm.h>
 
 #include <stdio.h>
