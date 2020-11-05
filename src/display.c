@@ -979,6 +979,7 @@ void go2_presenter_destroy(go2_presenter_t* presenter)
 
 void go2_presenter_post(go2_presenter_t* presenter, go2_surface_t* surface, int srcX, int srcY, int srcWidth, int srcHeight, int dstX, int dstY, int dstWidth, int dstHeight, go2_rotation_t rotation)
 {
+	rga_info_t dst = { 0 };
     sem_wait(&presenter->freeSem);
 
 
@@ -997,23 +998,26 @@ void go2_presenter_post(go2_presenter_t* presenter, go2_surface_t* surface, int 
 
     go2_surface_t* dstSurface = go2_frame_buffer_surface_get(dstFrameBuffer);
 
-    rga_info_t dst = { 0 };
-    dst.fd = go2_surface_prime_fd(dstSurface);
-    dst.mmuFlag = 1;
-    dst.rect.xoffset = 0;
-    dst.rect.yoffset = 0;
-    dst.rect.width = go2_surface_width_get(dstSurface);
-    dst.rect.height = go2_surface_height_get(dstSurface);
-    dst.rect.wstride = go2_surface_stride_get(dstSurface) / (go2_drm_format_get_bpp(go2_surface_format_get(dstSurface)) / 8);
-    dst.rect.hstride = go2_surface_height_get(dstSurface);
-    dst.rect.format = go2_rkformat_get(go2_surface_format_get(dstSurface));
-    dst.color = presenter->background_color;
+	/* Don't refresh if screen resolution is same as OGA */
+	if (!(dstWidth == 320 && dstHeight == 480) || !(dstWidth == 480 && dstHeight == 320))
+	{
+		dst.fd = go2_surface_prime_fd(dstSurface);
+		dst.mmuFlag = 1;
+		dst.rect.xoffset = 0;
+		dst.rect.yoffset = 0;
+		dst.rect.width = go2_surface_width_get(dstSurface);
+		dst.rect.height = go2_surface_height_get(dstSurface);
+		dst.rect.wstride = go2_surface_stride_get(dstSurface) / (go2_drm_format_get_bpp(go2_surface_format_get(dstSurface)) / 8);
+		dst.rect.hstride = go2_surface_height_get(dstSurface);
+		dst.rect.format = go2_rkformat_get(go2_surface_format_get(dstSurface));
+		dst.color = presenter->background_color;
 
-    int ret = c_RkRgaColorFill(&dst);
-    if (ret)
-    {
-        printf("c_RkRgaColorFill failed.\n");
-    }
+		int ret = c_RkRgaColorFill(&dst);
+		if (ret)
+		{
+			printf("c_RkRgaColorFill failed.\n");
+		}
+	}
 
 
     go2_surface_blit(surface, srcX, srcY, srcWidth, srcHeight, dstSurface, dstX, dstY, dstWidth, dstHeight, rotation);
